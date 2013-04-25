@@ -54,6 +54,7 @@ def local(filename, **kwargs):
 
 def youtube(url, **kwargs):
     if verify_youtube(url):
+        print "Downloading", url, "now! Please wait!"
         os.system('youtube-dl -q -o "temp-output-video.%(ext)s" ' + url)
         play("temp-output-video.*", **kwargs)
         os.system('rm temp-output-video.*')
@@ -79,15 +80,20 @@ def main():
 
     args = cli_parser.parse_args()
 
-    filename = "temp-output-video.*"
-
     kwargs = get_args(args)
+    success = False
 
     if args.youtube is not None:
-        youtube(args.youtube, **kwargs)
+        success = youtube(args.youtube, **kwargs)
 
     elif args.filename is not None:
-        local(args.filename, **kwargs)
+        success = local(args.filename, **kwargs)
+
+    if success:
+        "Thanks for using py-mplayer!"
+
+    else:
+        "There was a strange error, make sure you formatted all inputs correctly."
 
 if __name__ == "__main__":
     main()
